@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(New-Item -ItemType Directory -Force \"c:\\\\Workspace\\\\CodeSamples\\\\REdisCachewithReact\\\\RedisCachingApi\\\\Models\")",
+      "Bash(New-Item -ItemType Directory -Force \"c:\\\\Workspace\\\\CodeSamples\\\\REdisCachewithReact\\\\RedisCachingApi\\\\Controllers\")",
+      "Bash(New-Item -ItemType Directory -Force \"c:\\\\Workspace\\\\CodeSamples\\\\REdisCachewithReact\\\\RedisCachingApi\\\\Services\")",
+      "Bash(New-Item -ItemType Directory -Force \"c:\\\\Workspace\\\\CodeSamples\\\\REdisCachewithReact\\\\RedisCachingApi\\\\Hubs\")",
+      "Bash(New-Item -ItemType Directory -Force \"c:\\\\Workspace\\\\CodeSamples\\\\REdisCachewithReact\\\\RedisCachingApi\\\\Data\")"
+    ]
+  }
+}

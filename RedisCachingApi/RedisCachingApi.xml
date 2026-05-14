@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RedisCachingApi</name>
+    </assembly>
+    <members>
+        <member name="T:RedisCachingApi.Controllers.ProductsController">
+            <summary>
+            CRUD API for Products demonstrating Redis caching strategies.
+            Each endpoint documents which caching strategy it exercises.
+            </summary>
+        </member>
+        <member name="M:RedisCachingApi.Controllers.ProductsController.GetAll">
+            <summary>
+            Get all products using Cache-Aside strategy.
+            First call hits DB and populates Redis. Subsequent calls return cached data.
+            Cache expires after 10 min (absolute) or 2 min of inactivity (sliding).
+            </summary>
+            <returns>List of all products</returns>
+            <response code="200">Returns the list of products</response>
+        </member>
+        <member name="M:RedisCachingApi.Controllers.ProductsController.GetById(System.Int32)">
+            <summary>
+            Get a single product by ID using Hybrid Caching (L1 MemoryCache → L2 Redis → DB).
+            </summary>
+            <param name="id">Product ID</param>
+            <returns>The requested product</returns>
+            <response code="200">Product found</response>
+            <response code="404">Product not found</response>
+        </member>
+        <member name="M:RedisCachingApi.Controllers.ProductsController.Create(RedisCachingApi.DTOs.CreateProductDto)">
+            <summary>
+            Create a new product using Write-Through strategy.
+            Writes to DB and Redis synchronously, then broadcasts via SignalR.
+            </summary>
+            <param name="dto">Product creation data</param>
+            <returns>Created product with assigned ID</returns>
+            <response code="201">Product created successfully</response>
+            <response code="400">Invalid request data</response>
+        </member>
+        <member name="M:RedisCachingApi.Controllers.ProductsController.CreateWriteBehind(RedisCachingApi.DTOs.CreateProductDto)">
+            <summary>
+            Create a product using Write-Behind strategy.
+            Updates Redis immediately; DB write is queued and processed asynchronously.
+            </summary>
+            <param name="dto">Product creation data</param>
+            <returns>Cached product (DB write pending)</returns>
+            <response code="202">Product accepted and cached; DB write queued</response>
+        </member>
+        <member name="M:RedisCachingApi.Controllers.ProductsController.Update(System.Int32,RedisCachingApi.DTOs.UpdateProductDto)">
+            <summary>
+            Update a product using Write-Through strategy.
+            Updates DB and Redis cache in a single synchronous operation.
+            </summary>
+            <param name="id">Product ID to update</param>
+            <param name="dto">Updated product data</param>
+            <response code="200">Product updated</response>
+            <response code="404">Product not found</response>
+        </member>
+        <member name="M:RedisCachingApi.Controllers.ProductsController.Delete(System.Int32)">
+            <summary>
+            Delete a product and remove it from all cache layers (Redis + MemoryCache).
+            </summary>
+            <param name="id">Product ID to delete</param>
+            <response code="204">Product deleted</response>
+            <response code="404">Product not found</response>
+        </member>
+        <member name="T:RedisCachingApi.Data.InMemoryProductRepository">
+            <summary>
+            Simulates a database using an in-memory store.
+            In production this would be EF Core / SQL Server / etc.
+            </summary>
+        </member>
+        <member name="T:RedisCachingApi.Hubs.ProductHub">
+            <summary>
+            SignalR hub that pushes real-time product change events to all connected React clients.
+            Events: ProductCreated, ProductUpdated, ProductDeleted.
+            </summary>
+        </member>
+        <member name="T:RedisCachingApi.Services.ICacheService">
+            <summary>
+            Abstraction over IDistributedCache with typed get/set helpers.
+            </summary>
+        </member>
+        <member name="T:RedisCachingApi.Services.ProductService">
+            <summary>
+            Demonstrates all five Redis caching strategies:
+            Cache-Aside, Read-Through, Write-Through, Write-Behind, Hybrid (L1+L2).
+            </summary>
+        </member>
+    </members>
+</doc>
