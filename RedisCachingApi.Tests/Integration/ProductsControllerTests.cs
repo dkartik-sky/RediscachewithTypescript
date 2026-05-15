@@ -5,6 +5,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using RedisCachingApi.DTOs;
 using RedisCachingApi.Models;
 
@@ -34,9 +35,17 @@ public class ProductsControllerTests : IClassFixture<WebApplicationFactory<Progr
     {
         _client = factory.WithWebHostBuilder(builder =>
         {
+            // Force Development so UseSwagger() and UseSwaggerUI() are registered
+            builder.UseEnvironment("Development");
+
             builder.ConfigureServices(services =>
             {
-                // Replace Redis with in-memory cache for tests (no Docker required)
+                // AddDistributedMemoryCache uses TryAdd internally — it is a no-op
+                // if IDistributedCache is already registered (which Redis does with
+                // a plain Add, not TryAdd). Remove Redis first so the in-memory
+                // implementation actually takes effect and nothing tries to connect
+                // to a Redis server that doesn't exist in CI.
+                services.RemoveAll<IDistributedCache>();
                 services.AddDistributedMemoryCache();
             });
         }).CreateClient();

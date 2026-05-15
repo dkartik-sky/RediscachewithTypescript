@@ -35,16 +35,8 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Restore API
-        run: dotnet restore RedisCachingApi/RedisCachingApi.csproj
-
-      - name: Build API
-        run: |
-          dotnet build RedisCachingApi/RedisCachingApi.csproj \
-            --no-restore \
-            --configuration Release
-
-      - name: Restore tests
+      - name: Restore
+        # Restoring the test project also restores the API via ProjectReference
         run: dotnet restore RedisCachingApi.Tests/RedisCachingApi.Tests.csproj
 
       - name: Run tests
@@ -89,7 +81,7 @@ jobs:
         run: npm ci
 
       - name: Type-check
-        run: npx tsc -p tsconfig.app.json --noEmit
+        run: npm run typecheck
 
       - name: Run unit tests
         run: npm test
