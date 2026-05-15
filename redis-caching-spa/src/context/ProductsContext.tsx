@@ -14,7 +14,7 @@ import {
   useReducer,
   type ReactNode,
 } from 'react';
-import type { DataSource, Product, ProductAction, ProductsState } from '../types';
+import type { ProductAction, ProductsState } from '../types';
 
 // ─── Reducer ───────────────────────────────────────────────────────────────
 

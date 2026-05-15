@@ -49,7 +49,7 @@ export default function CachingInfo() {
         name: 'Write-Through',
         emoji: '✏️',
         summary:
-          'Every write goes through the cache layer which writes to the DB and cache synchronously. Guarantees cache-DB consistency at the cost of slightly slower writes.',
+          'Every write goes through the cache layer which writes to the Database and cache synchronously. Guarantees cache-DB consistency at the cost of slightly slower writes.',
         flow: [
           'App writes to cache service',
           'Cache service writes to DB',

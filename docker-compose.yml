@@ -1,0 +1,51 @@
+# docker-compose.yml — local Docker Desktop deployment
+#
+# Pull pre-built images from Docker Hub and run the full stack locally.
+#
+# Usage:
+#   DOCKERHUB_USERNAME=<your-username> docker compose up -d
+#   docker compose down
+#
+# Required env var: DOCKERHUB_USERNAME (your Docker Hub account name)
+# Optional: set it in a .env file alongside this file.
+
+services:
+
+  # ── Redis ───────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: redis-demo
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # ── .NET Core 10 Web API ─────────────────────────────────────────────────
+  api:
+    image: ${DOCKERHUB_USERNAME}/redis-caching-api:latest
+    container_name: redis-caching-api
+    restart: unless-stopped
+    ports:
+      - "5168:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__Redis=redis:6379
+      # Must match the SPA's origin so CORS preflight succeeds
+      - AllowedOrigins=http://localhost:5174
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  # ── React SPA (nginx) ────────────────────────────────────────────────────
+  spa:
+    image: ${DOCKERHUB_USERNAME}/redis-caching-spa:latest
+    container_name: redis-caching-spa
+    restart: unless-stopped
+    ports:
+      - "5174:80"
+    depends_on:
+      - api

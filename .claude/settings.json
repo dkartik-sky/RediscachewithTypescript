@@ -5,7 +5,11 @@
       "Bash(New-Item -ItemType Directory -Force \"c:\\\\Workspace\\\\CodeSamples\\\\REdisCachewithReact\\\\RedisCachingApi\\\\Controllers\")",
       "Bash(New-Item -ItemType Directory -Force \"c:\\\\Workspace\\\\CodeSamples\\\\REdisCachewithReact\\\\RedisCachingApi\\\\Services\")",
       "Bash(New-Item -ItemType Directory -Force \"c:\\\\Workspace\\\\CodeSamples\\\\REdisCachewithReact\\\\RedisCachingApi\\\\Hubs\")",
-      "Bash(New-Item -ItemType Directory -Force \"c:\\\\Workspace\\\\CodeSamples\\\\REdisCachewithReact\\\\RedisCachingApi\\\\Data\")"
+      "Bash(New-Item -ItemType Directory -Force \"c:\\\\Workspace\\\\CodeSamples\\\\REdisCachewithReact\\\\RedisCachingApi\\\\Data\")",
+      "PowerShell(New-Item -ItemType Directory -Force \"c:\\\\Workspace\\\\CodeSamples\\\\REdisCachewithReact\\\\.github\\\\workflows\")",
+      "Bash(docker --version)",
+      "Bash(docker info *)",
+      "Bash(docker build *)"
     ]
   }
 }
